@@ -27,6 +27,11 @@ const navItemInfo = [
   },
 ];
 const NavItems = ({ item }) => {
+  const [dropdown, setDropdown] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdown(!dropdown);
+  };
   return (
     <li className="relative group">
       {item.type === "link" ? (
@@ -39,27 +44,26 @@ const NavItems = ({ item }) => {
           </span>
         </>
       ) : (
-        <>
-          <a href="/" className="px-4 py-2 flex items-center">
+        <div className="flex flex-col items-center">
+          <button className="px-4 py-2 flex items-center" onClick={toggleDropdown}>
             <span>{item.name}</span>
             <MdKeyboardArrowDown />
-          </a>
-          <div className="hidden transition-all duration-500 group-hover:block pt-2 absolute bottom-0 right-0 transform translate-y-full w-max">
-            <ul className="bg-white rounded-lg shadow-lg overflow-hidden">
+          </button>
+          <div className={`${dropdown ? "block" : "hidden"} lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-max`}>
+            <ul className="bg-dark-soft lg:bg-transparent rounded-lg shadow-lg overflow-hidden">
               {item.items.map((pageItems, index) => (
-                  <li key={index}>
-                    <a
-                      href="/"
-                      className="flex flex-col px-4 py-2 hover:bg-dark-hard text-[#000] hover:text-white lg:text-dark-soft "
-                    >
-                      {pageItems}
-                    </a>
-                  </li>
-                )
-              )}
+                <li key={index}>
+                  <a
+                    href="/"
+                    className="flex flex-col px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft "
+                  >
+                    {pageItems}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-        </>
+        </div>
       )}
     </li>
   );
