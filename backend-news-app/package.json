@@ -1,0 +1,21 @@
+{
+  "name": "backend-news-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  
+  "scripts": {
+    "start": "node -r esm server.js",
+    "dev": "nodemon -r esm server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "esm": "^3.2.25",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1"
+  }
+}
