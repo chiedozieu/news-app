@@ -3,6 +3,8 @@ import MainLayout from "../../components/MainLayout";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import { Link } from "react-router-dom";
 import SuggestPost from "./container/SuggestPost";
+import CommentsContainer from "../../components/comments/CommentsContainer";
+import SocialShareButtons from "../../components/SocialShareButtons";
 
 const ArticleDetailPage = () => {
   const breadCrumbsData = [
@@ -99,13 +101,24 @@ const ArticleDetailPage = () => {
               recusandae?
             </p>
           </div>
+          <CommentsContainer className="mt-10" loggedInUserId={"a"} />
         </article>
-        <SuggestPost
-          header="Latest Articles"
-          posts={postsData}
-          tags={tagsData}
-          className={'mt-8'}
-        />
+          <div className="mt-7">
+            <h2 className="font-roboto font-medium mb-4 md:text-xl text-dark-hard">
+              <SocialShareButtons
+                url={encodeURI("https://www.google.com")}
+                title={encodeURIComponent("Google website")}
+              />
+            </h2>
+          </div>
+        <div className="">
+          <SuggestPost
+            header="Latest Articles"
+            posts={postsData}
+            tags={tagsData}
+            className={"mt-8"}
+          />
+        </div> 
       </div>
     </MainLayout>
   );
