@@ -7,7 +7,7 @@ export const registerUser = async (req, res, next) => {
     let user = await User.findOne({ email });
 
     if (user) {
-    throw new Error("User already exists");
+      throw new Error("User already exists");
     }
 
     user = await User.create({ name, email, password });
@@ -23,8 +23,34 @@ export const registerUser = async (req, res, next) => {
       verified: user.verified,
       token,
     });
+  } catch (error) {
+    next(error);
+  }
+};
 
-    
+export const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("Invalid user");
+    }
+    const isPasswordMatch = await user.comparePassword(password);
+
+    if (isPasswordMatch) {
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        admin: user.admin,
+        avatar: user.avatar,
+        verified: user.verified,
+        token: user.generateJWT(),
+      });
+    } else {
+      throw new Error("Invalid email or password");
+    }
   } catch (error) {
     next(error);
   }
