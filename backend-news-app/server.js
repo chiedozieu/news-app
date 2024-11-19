@@ -1,8 +1,12 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import { errorResponseHandler, invalidPathHandler } from "./middleware/errorHandler.js";
 
+// Routes
+import userRoutes from "./routes/userRoutes.js";
+
+ 
 dotenv.config()
 const app = express();
 app.use(express.json());
@@ -12,6 +16,11 @@ connectDB();
 app.get('/', (req, res) => {
     res.send('Server is running...');
 })
+
+app.use('/api/users', userRoutes)
+
+app.use(invalidPathHandler)
+app.use(errorResponseHandler)
 
 
 const PORT = process.env.PORT || 5000;
