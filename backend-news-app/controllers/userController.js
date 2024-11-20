@@ -55,3 +55,23 @@ export const loginUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const userProfile = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.user._id);
+    if (user) {
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        admin: user.admin,
+        avatar: user.avatar,
+        verified: user.verified,
+      });
+    }else {
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
