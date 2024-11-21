@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { images } from "../constants";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const navItemInfo = [
   {
@@ -110,12 +111,12 @@ const Header = () => {
           </div>
 
           <div>
-            <button className="bg-[#000] border-r text-white px-5 py-2 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]">
+            <Link to="/register" className="bg-[#000] border-r text-white px-5 py-3 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]">
               Register
-            </button>
-            <button className="bg-[#fff] text-black px-5 py-2 hover:bg-[#000000b8] hover:text-white">
+            </Link>
+            <Link className="bg-[#fff] text-black px-5 py-3 hover:bg-[#000000b8] hover:text-white">
               Sign In
-            </button>
+            </Link>
           </div>
         </div>
       </header>
