@@ -3,6 +3,8 @@ import { images } from "../constants";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/actions/user";
 
 const navItemInfo = [
   {
@@ -46,11 +48,18 @@ const NavItems = ({ item }) => {
         </>
       ) : (
         <div className="flex flex-col items-center">
-          <button className="px-4 py-2 flex items-center" onClick={toggleDropdown}>
+          <button
+            className="px-4 py-2 flex items-center"
+            onClick={toggleDropdown}
+          >
             <span>{item.name}</span>
             <MdKeyboardArrowDown />
           </button>
-          <div className={`${dropdown ? "block" : "hidden"} lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-max`}>
+          <div
+            className={`${
+              dropdown ? "block" : "hidden"
+            } lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-max`}
+          >
             <ul className="bg-dark-soft lg:bg-transparent rounded-lg shadow-lg overflow-hidden">
               {item.items.map((pageItems, index) => (
                 <li key={index}>
@@ -71,12 +80,20 @@ const NavItems = ({ item }) => {
 };
 const Header = () => {
   const [navIsVisible, setNavIsVisible] = useState(false);
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  const userState = useSelector((state) => state.user);
+  const dispatch = useDispatch()
+
 
   const navVisibilityHandler = () => {
     setNavIsVisible((curState) => {
       return !curState;
     });
   };
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
 
   return (
     <section className="sticky top-0 left-0 right-0 z-10 bg-white">
@@ -110,13 +127,59 @@ const Header = () => {
             ))}
           </div>
 
-          <div>
-            <Link to="/register" className="bg-[#000] border-r text-white px-5 py-3 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]">
-              Register
-            </Link>
-            <Link className="bg-[#fff] text-black px-5 py-3 hover:bg-[#000000b8] hover:text-white">
-              Sign In
-            </Link>
+          <div className="flex flex-col lg:flex-row gap-2 items-center">
+            <div className="register">
+              {userState.userInfo ? (
+                `Welcome ${userState.userInfo.name}!`
+              ) : (
+                <Link
+                  to="/register"
+                  className={`${
+                    userState.userInfo
+                      ? "cursor-none"
+                      : "bg-[#000] border-r text-white px-5 py-3 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]"
+                  } `}
+                >
+                  Register
+                </Link> 
+              )}
+            </div>
+
+            <div className="signin">
+              {userState.userInfo ? (
+                <div className="text-white items-center gap-y-5 lg:text-dark-soft flex flex-col lg:flex-row gap-x-2 font-semibold">
+                  <div className="relative group">
+                    <div className="flex flex-col items-center">
+                      <button
+                        className="px-4 py-2 flex items-center"
+                        onClick={() => setProfileDropdown(!profileDropdown)}
+                      >
+                        <span>Profile</span>
+                        <MdKeyboardArrowDown />
+                      </button>
+                      <div
+                        className={`${
+                          profileDropdown ? "block" : "hidden"
+                        } lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-max`}
+                      >
+                        <ul className="bg-dark-soft lg:bg-transparent rounded-lg shadow-lg overflow-hidden">
+                          <button type="button" className="flex flex-col px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft ">
+                            Dashboard
+                          </button>
+                          <button onClick={logoutHandler} type="button" className="flex flex-col w-full px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft ">
+                            Logout
+                          </button>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link className="bg-[#fff] text-black px-5 py-3 hover:bg-[#000000b8] hover:text-white">
+                  Sign In
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </header>

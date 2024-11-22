@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MainLayout from "../../components/MainLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { signup } from "../../services/index/users";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { userActions } from "../../store/reducers/userReducer";
 
 const RegisterPage = () => {
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ name, email, password }) => {
+      return signup({ name, email, password });
+    },
+    onSuccess: (data) => {
+      dispatch(userActions.setUserInfo(data));
+      localStorage.setItem("account", JSON.stringify(data)); // save to localStorage
+      toast.success("Welcome " + data.name + "!");
+      console.log(data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
+  });
+
+  useEffect(() => {
+    if (userState.userInfo) {
+      navigate("/");
+    }
+  }, [userState.userInfo, navigate]);
+
   const {
     register,
     handleSubmit,
@@ -18,12 +49,12 @@ const RegisterPage = () => {
     },
     mode: "onChange",
   });
-  const submitHandler = (data, e) => {
-    e.preventDefault();
-    console.log(data)
+  const submitHandler = (data) => {
+    const { name, email, password } = data;
+    mutate({ name, email, password });
   };
 
-  const password = watch("password")
+  const password = watch("password");
   return (
     <MainLayout>
       <section className="container mx-auto px-5 py-10">
@@ -58,9 +89,7 @@ const RegisterPage = () => {
                 }`}
               />
               {errors?.name?.message && (
-                <p className="text-red-500 text-xs">
-                  {errors?.name?.message}
-                </p>
+                <p className="text-red-500 text-xs">{errors?.name?.message}</p>
               )}
             </div>
             <div className="flex flex-col mb-6 w-full">
@@ -89,11 +118,9 @@ const RegisterPage = () => {
                   errors?.email ? "border-red-500" : ""
                 }`}
               />
-            {errors?.email?.message && (
-              <p className="text-red-500 text-xs">
-                {errors?.email?.message}
-              </p>
-            )}
+              {errors?.email?.message && (
+                <p className="text-red-500 text-xs">{errors?.email?.message}</p>
+              )}
             </div>
             <div className="flex flex-col mb-6 w-full">
               <label
@@ -146,7 +173,7 @@ const RegisterPage = () => {
                     if (value !== password) {
                       return "Passwords do not match";
                     }
-                  }
+                  },
                 })}
                 className={`w-full px-2 py-4 md:py-2 rounded-lg border border-[#00000028] placeholder:text-[#959ead] text-dark-hard mt-3 block outline-none ${
                   errors?.confirmPassword ? "border-red-500" : ""
@@ -166,7 +193,7 @@ const RegisterPage = () => {
             </Link>
             <button
               type="submit"
-              disabled={!isValid}
+              disabled={!isValid || isLoading}
               className="w-full bg-[#1d1d7d] py-4 md:py-2 rounded-lg text-white font-semibold my-6 hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               Register
