@@ -3,19 +3,19 @@ import MainLayout from "../../components/MainLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { signup } from "../../services/index/users";
+import { login } from "../../services/index/users";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { userActions } from "../../store/reducers/userReducer";
 
-const RegisterPage = () => {
+const LoginPage = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ name, email, password }) => {
-      return signup({ name, email, password });
+    mutationFn: ({ email, password }) => {
+      return login({ email, password });
     },
     onSuccess: (data) => {
       dispatch(userActions.setUserInfo(data));
@@ -39,59 +39,26 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
   } = useForm({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
     mode: "onChange",
   });
   const submitHandler = (data) => {
-    const { name, email, password } = data;
-    mutate({ name, email, password });
+    const { email, password } = data;
+    mutate({ email, password });
   };
 
-  const password = watch("password");
   return (
     <MainLayout>
       <section className="container mx-auto px-5 py-10">
         <div className="w-full md:max-w-sm mx-auto">
           <h1 className="font-bold text-2xl font-roboto text-center text-dark-hard mb-8">
-            Sign Up
+            Login
           </h1>
           <form onSubmit={handleSubmit(submitHandler)}>
-            <div className="flex flex-col mb-6 w-full">
-              <label
-                htmlFor="name"
-                className="text-[#3e3c3c] font-semibold block"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter name..."
-                id="name"
-                {...register("name", {
-                  minLength: {
-                    value: 1,
-                    message: "Name length must be at least 1 character",
-                  },
-                  required: {
-                    value: true,
-                    message: "Name is required",
-                  },
-                })}
-                className={`w-full px-2 py-4 md:py-2 rounded-lg border border-[#00000028] placeholder:text-[#959ead] text-dark-hard mt-3 block outline-none ${
-                  errors?.name ? "border-red-500" : ""
-                }`}
-              />
-              {errors?.name?.message && (
-                <p className="text-red-500 text-xs">{errors?.name?.message}</p>
-              )}
-            </div>
             <div className="flex flex-col mb-6 w-full">
               <label
                 htmlFor="email"
@@ -153,53 +120,27 @@ const RegisterPage = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col mb-6 w-full">
-              <label
-                htmlFor="name"
-                className="text-[#3e3c3c] font-semibold block"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                placeholder="Confirm password..."
-                id="confirmPassword"
-                {...register("confirmPassword", {
-                  required: {
-                    value: true,
-                    message: "Confirm password is required",
-                  },
-                  validate: (value) => {
-                    if (value !== password) {
-                      return "Passwords do not match";
-                    }
-                  },
-                })}
-                className={`w-full px-2 py-4 md:py-2 rounded-lg border border-[#00000028] placeholder:text-[#959ead] text-dark-hard mt-3 block outline-none ${
-                  errors?.confirmPassword ? "border-red-500" : ""
-                }`}
-              />
-              {errors?.confirmPassword?.message && (
-                <p className="text-red-500 text-xs">
-                  {errors?.confirmPassword?.message}
-                </p>
-              )}
-            </div>
 
+            <Link
+              to={"/forgot-password"}
+              className="font-semibold text-[#1d1d7d]"
+            >
+              Forgot password?
+            </Link>
             <button
               type="submit"
               disabled={!isValid || isLoading}
               className="w-full bg-[#1d1d7d] py-4 md:py-2 rounded-lg text-white font-semibold my-6 hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Register
+              Login
             </button>
             <p className="">
-              Have and account?{" "}
+              Do not have an account?{" "}
               <Link
-                to={"/login"}
+                to={"/register"}
                 className="font-semibold text-[#1d1d7d] hover:text-opacity-80 disabled:opacity-70"
               >
-                Login
+                Register
               </Link>
             </p>
           </form>
@@ -209,4 +150,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

@@ -69,6 +69,7 @@ export const userProfile = async (req, res, next) => {
         admin: user.admin,
         avatar: user.avatar,
         verified: user.verified,
+        token: await user.generateJWT(),
       });
     } else {
       throw new Error("User not found");
@@ -93,12 +94,16 @@ export const updateProfile = async (req, res, next) => {
       user.password = req.body.password;
     }
 
-    const updatedUser = await user.save();
+    const updatedUserProfile = await user.save();
 
-    const { password, ...userWithoutPassword } = updatedUser.toObject();
-
-    return res.status(200).json({
-      updatedUser: userWithoutPassword,
+    res.status(201).json({
+      _id: updatedUserProfile._id,
+      name: updatedUserProfile.name,
+      email: updatedUserProfile.email,
+      admin: updatedUserProfile.admin,
+      avatar: updatedUserProfile.avatar,
+      verified: updatedUserProfile.verified,
+      token: await updatedUserProfile.generateJWT(),
     });
   } catch (error) {
     next(error);

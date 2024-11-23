@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { images } from "../constants";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/actions/user";
 
@@ -82,8 +82,8 @@ const Header = () => {
   const [navIsVisible, setNavIsVisible] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const userState = useSelector((state) => state.user);
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const navVisibilityHandler = () => {
     setNavIsVisible((curState) => {
@@ -92,8 +92,8 @@ const Header = () => {
   };
 
   const logoutHandler = () => {
-    dispatch(logout())
-  }
+    dispatch(logout());
+  };
 
   return (
     <section className="sticky top-0 left-0 right-0 z-10 bg-white">
@@ -132,16 +132,16 @@ const Header = () => {
               {userState.userInfo ? (
                 `Welcome ${userState.userInfo.name}!`
               ) : (
-                <Link
-                  to="/register"
+                <button
+                  onClick={() => navigate("/register")}
                   className={`${
                     userState.userInfo
                       ? "cursor-none"
-                      : "bg-[#000] border-r text-white px-5 py-3 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]"
+                      : "bg-[#000] border-r text-white px-5 py-2 lg:hover:bg-[#000000b8] hover:bg-[#0000005f]"
                   } `}
                 >
                   Register
-                </Link> 
+                </button>
               )}
             </div>
 
@@ -154,19 +154,27 @@ const Header = () => {
                         className="px-4 py-2 flex items-center"
                         onClick={() => setProfileDropdown(!profileDropdown)}
                       >
-                        <span>Profile</span>
+                        <span>Account</span>
                         <MdKeyboardArrowDown />
                       </button>
                       <div
                         className={`${
                           profileDropdown ? "block" : "hidden"
-                        } lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-max`}
+                        } lg:hidden transition-all duration-500 lg:group-hover:block pt-2 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full w-full`}
                       >
                         <ul className="bg-dark-soft lg:bg-transparent rounded-lg shadow-lg overflow-hidden">
-                          <button type="button" className="flex flex-col px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft ">
-                            Dashboard
+                          <button
+                            onClick={() => navigate("/profile")}
+                            type="button"
+                            className="flex flex-col px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft w-full"
+                          >
+                            Profile
                           </button>
-                          <button onClick={logoutHandler} type="button" className="flex flex-col w-full px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft ">
+                          <button
+                            onClick={logoutHandler}
+                            type="button"
+                            className="flex flex-col w-full px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft "
+                          >
                             Logout
                           </button>
                         </ul>
@@ -175,9 +183,12 @@ const Header = () => {
                   </div>
                 </div>
               ) : (
-                <Link className="bg-[#fff] text-black px-5 py-3 hover:bg-[#000000b8] hover:text-white">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-[#fff] text-black px-5 py-2 hover:bg-[#000000b8] hover:text-white"
+                >
                   Sign In
-                </Link>
+                </button>
               )}
             </div>
           </div>
