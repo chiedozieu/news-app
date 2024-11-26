@@ -129,9 +129,14 @@ export const updateProfilePicture = async (req, res, next) => {
           updatedUser.avatar = req.file.filename;
           await updatedUser.save();
 
-          const { password, ...userWithoutPassword } = updatedUser.toObject();
-          res.status(200).json({
-            updatedUser: userWithoutPassword,
+          res.status(201).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            admin: updatedUser.admin,
+            avatar: updatedUser.avatar,
+            verified: updatedUser.verified,
+            token: await updatedUser.generateJWT(),
           });
         } else {
           let filename;
@@ -141,10 +146,14 @@ export const updateProfilePicture = async (req, res, next) => {
           await updatedUser.save();
           fileRemover(filename);
 
-          const { password, ...userWithoutPassword } = updatedUser.toObject();
-
-          res.status(200).json({
-            updatedUser: userWithoutPassword,
+          res.status(201).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            admin: updatedUser.admin,
+            avatar: updatedUser.avatar,
+            verified: updatedUser.verified,
+            token: await updatedUser.generateJWT(),
           });
         }
       }
