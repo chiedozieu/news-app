@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { images } from "../constants";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/actions/user";
 
@@ -10,23 +10,30 @@ const navItemInfo = [
   {
     name: "Home",
     type: "link",
+    href: "/",
   },
   {
     name: "Articles",
     type: "link",
+    href: "/articles",
   },
   {
     name: "Pages",
     type: "dropdown",
-    items: ["About us", "Contact us"],
+    items: [
+      { title: "About us", href: "/about" },
+      { title: "Contact us", href: "/contact" },
+    ],
   },
   {
-    name: "Pricing",
+    name: "Politics",
     type: "link",
+    href: "/Politics",
   },
   {
-    name: "Faq",
+    name: "Sports",
     type: "link",
+    href: "/Sports",
   },
 ];
 const NavItems = ({ item }) => {
@@ -39,9 +46,9 @@ const NavItems = ({ item }) => {
     <li className="relative group">
       {item.type === "link" ? (
         <>
-          <a href="/" className="px-4 py-2">
+          <Link to={item.href} className="px-4 py-2">
             {item.name}
-          </a>
+          </Link>
           <span className="cursor-pointer text-blue-500 absolute transition-all duration-500 font-bold right-0 top-0 opacity-0 group-hover:right-[90%] group-hover:opacity-100">
             /
           </span>
@@ -63,12 +70,12 @@ const NavItems = ({ item }) => {
             <ul className="bg-dark-soft lg:bg-transparent rounded-lg shadow-lg overflow-hidden">
               {item.items.map((pageItems, index) => (
                 <li key={index}>
-                  <a
-                    href="/"
+                  <Link
+                    to={pageItems.href}
                     className="flex flex-col px-4 py-2 hover:bg-[#1d1d7d] lg:hover:bg-dark-hard text-[#fff] hover:text-white lg:text-dark-soft "
                   >
-                    {pageItems}
-                  </a>
+                    {pageItems.title}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -98,9 +105,9 @@ const Header = () => {
   return (
     <section className="sticky top-0 left-0 right-0 z-10 bg-white">
       <header className="container mx-auto px-2 py-2 flex justify-between items-center">
-        <div className="">
+        <Link to="/" className="">
           <img className="w-14 h-14" src={images.logo} alt="logo" />
-        </div>
+        </Link>
         <div className="z-50 lg:hidden">
           {navIsVisible ? (
             <AiOutlineClose
