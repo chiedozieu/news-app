@@ -24,7 +24,7 @@ export const registerUser = async (req, res, next) => {
       avatar: user.avatar,
       verified: user.verified,
       token,
-    });
+    })
   } catch (error) {
     next(error);
   }

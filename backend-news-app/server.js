@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 
 // Routes
 import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
  
 dotenv.config()
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', userRoutes)
+app.use('/api/posts', postRoutes)
 
 // Static file middleware
 // Define __dirname for ES modules

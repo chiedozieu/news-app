@@ -96,6 +96,7 @@ const ProfilePicture = ({ avatar }) => {
         {avatar && (
           <button
             onClick={handleDeleteImage}
+            disabled={isLoading}
             type="button"
             className="absolute bottom-3 left-14 font-bold rounded-full p-1 bg-white"
           >
