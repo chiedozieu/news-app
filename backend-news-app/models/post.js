@@ -8,11 +8,11 @@ const postSchema = new mongoose.Schema(
     body: { type: Object, required: true },
     photo: { type: String, required: false },
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    tags: { type: [String] },
+    tags: { type: [String] }, 
     categories: [{ type: Schema.Types.ObjectId, ref: "postCategories"}],
   },
   {
-    timestamps: true,
+    timestamps: true, toJSON: {virtuals: true}
   }
 );
 
